@@ -48,5 +48,3 @@ local Window = Rayfield:CreateWindow({
     Duration = 3,
     Image = 4483362458,
  })
-
- loadstring(game:HttpGet(  ))()
