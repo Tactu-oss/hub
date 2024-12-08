@@ -66,5 +66,3 @@ local Window = Rayfield:CreateWindow({
     -- The variable (Options) is a table of strings for the current selected options
     end,
  })
-
-
