@@ -1387,7 +1387,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 		if not Passthrough then
 			local AttemptsRemaining = math.random(2, 5)
 			Rayfield.Enabled = false
-			local KeyUI = useStudio and game:GetObjects("rbxassetid://138253128717208")[1]
+			local KeyUI = useStudio and script.Parent:FindFirstChild('Key') or game:GetObjects("rbxassetid://138253128717208")[1]
 
 			KeyUI.Enabled = true
 
