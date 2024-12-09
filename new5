@@ -55,52 +55,37 @@ local Window = Rayfield:CreateWindow({
     end,
  })
 
--- API URLs
-local apiBaseUrl = "https://your-api.com"
-local userId = tostring(game.Players.LocalPlayer.UserId) -- Unique user ID
+-- File name to store data
+local fileName = "dropdown_data.txt"
 
--- Load the saved option from the cloud
+-- Function to load saved data
 local function loadData()
-    local response
-    local success, err = pcall(function()
-        response = game:HttpGet(apiBaseUrl .. "/getdata?userid=" .. userId)
-    end)
-    if success and response then
-        return response -- Assuming the API returns the saved option as a plain string
+    if isfile(fileName) then
+        local content = readfile(fileName)
+        return content -- Return saved option
     else
-        print("Failed to load data:", err)
-        return "Option 1" -- Default fallback
+        return "Option 1" -- Default if no file exists
     end
 end
 
--- Save the selected option to the cloud
+-- Function to save data
 local function saveData(option)
-    local success, err = pcall(function()
-        game:HttpPost(apiBaseUrl .. "/savedata", 
-            game.HttpService:JSONEncode({
-                userid = userId,
-                option = option
-            }), 
-            Enum.HttpContentType.ApplicationJson
-        )
-    end)
-    if not success then
-        print("Failed to save data:", err)
-    end
+    writefile(fileName, option)
 end
 
--- Initialize the dropdown with saved data
+-- Load saved option when script executes
 local savedOption = loadData()
 
+-- Dropdown example
 local Dropdown = Tab:CreateDropdown({
     Name = "Dropdown Example",
     Options = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5"},
-    CurrentOption = {savedOption}, -- Use the saved option
+    CurrentOption = {savedOption},
     MultipleOptions = false,
     Flag = "Dropdown1",
     Callback = function(Options)
         local selectedOption = Options[1]
-        saveData(selectedOption) -- Save to the cloud
-        print("Option saved to the cloud:", selectedOption)
+        saveData(selectedOption) -- Save selected option locally
+        print("Option saved locally:", selectedOption)
     end,
 })
