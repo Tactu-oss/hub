@@ -55,19 +55,25 @@ local Window = Rayfield:CreateWindow({
     end,
  })
 
-  -- Initialize getgenv() global storage for the dropdown option
-getgenv().selectedOption = getgenv().selectedOption or "Option 1" -- Default to "Option 1" if not already set
+local fileName = "dropdown_data.txt"
 
--- Dropdown creation
+-- Load saved option if it exists
+if isfile(fileName) then
+    getgenv().selectedOption = readfile(fileName)
+else
+    getgenv().selectedOption = "Option 1" -- Default option
+end
+
+-- Save selected option
 local Dropdown = Tab:CreateDropdown({
     Name = "Dropdown Example",
     Options = {"Option 1", "Option 2", "Option 3", "Option 4", "Option 5"},
-    CurrentOption = {getgenv().selectedOption}, -- Use the globally saved option
+    CurrentOption = {getgenv().selectedOption},
     MultipleOptions = false,
     Flag = "Dropdown1",
     Callback = function(Options)
-        -- Save the selected option globally
         getgenv().selectedOption = Options[1]
-        print("Option saved globally:", getgenv().selectedOption)
+        writefile(fileName, getgenv().selectedOption) -- Save to file
+        print("Option saved to file:", getgenv().selectedOption)
     end,
 })
