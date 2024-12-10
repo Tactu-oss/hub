@@ -1,0 +1,112 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- Function to load saved data from file
+local function loadData(fileName, defaultValue)
+    if isfile(fileName) then
+        local content = readfile(fileName)
+        return content
+    else
+        return defaultValue -- Return default value if no file exists
+    end
+end
+
+-- Function to save data to file
+local function saveData(fileName, data)
+    writefile(fileName, data)
+end
+
+-- Load saved data for dropdowns and toggles
+local savedDropdown1 = loadData("dropdown1_data.txt", "Option 1")
+local savedDropdown2 = loadData("dropdown2_data.txt", "Option 1")
+local savedToggle1 = loadData("toggle1_data.txt", "false") == "true" -- Toggle data saved as "true"/"false"
+local savedToggle2 = loadData("toggle2_data.txt", "false") == "true"
+
+local Window = Rayfield:CreateWindow({
+    Name = "Rayfield Example Window",
+    Icon = 0,
+    LoadingTitle = "Rayfield Interface Suite",
+    LoadingSubtitle = "by Sirius",
+    Theme = "Default",
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false,
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil,
+        FileName = "Big Hub"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "noinvitelink",
+        RememberJoins = true
+    },
+    KeySystem = true,
+    KeySettings = {
+        Title = "Untitled",
+        Subtitle = "Key System",
+        Note = "No method of obtaining the key is provided",
+        FileName = "Key",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"Hello"}
+    }
+})
+
+local Tab = Window:CreateTab("Tab Example", "rewind")
+
+-- Dropdown 1
+local Dropdown1 = Tab:CreateDropdown({
+    Name = "Dropdown 1 Example",
+    Options = {"Option 1", "Option 2", "Option 3", "Option 4"},
+    CurrentOption = {savedDropdown1},
+    MultipleOptions = false,
+    Flag = "Dropdown1",
+    Callback = function(Options)
+        local selectedOption = Options[1]
+        saveData("dropdown1_data.txt", selectedOption) -- Save selected option
+        print("Dropdown 1 Option saved:", selectedOption)
+    end,
+})
+
+-- Dropdown 2
+local Dropdown2 = Tab:CreateDropdown({
+    Name = "Dropdown 2 Example",
+    Options = {"Option 1", "Option 2", "Option 3", "Option 4"},
+    CurrentOption = {savedDropdown2},
+    MultipleOptions = false,
+    Flag = "Dropdown2",
+    Callback = function(Options)
+        local selectedOption = Options[1]
+        saveData("dropdown2_data.txt", selectedOption) -- Save selected option
+        print("Dropdown 2 Option saved:", selectedOption)
+    end,
+})
+
+-- Toggle 1
+local Toggle1 = Tab:CreateToggle({
+    Name = "Toggle 1 Example",
+    CurrentValue = savedToggle1,
+    Flag = "Toggle1",
+    Callback = function(Value)
+        saveData("toggle1_data.txt", tostring(Value)) -- Save toggle state
+        print("Toggle 1 State saved:", Value)
+    end,
+})
+
+-- Toggle 2
+local Toggle2 = Tab:CreateToggle({
+    Name = "Toggle 2 Example",
+    CurrentValue = savedToggle2,
+    Flag = "Toggle2",
+    Callback = function(Value)
+        saveData("toggle2_data.txt", tostring(Value)) -- Save toggle state
+        print("Toggle 2 State saved:", Value)
+    end,
+})
+
+local Button = Tab:CreateButton({
+   Name = "Button Example",
+   Callback = function()
+       Rayfield:Destroy()
+       getgenv().HubExecuted = nil
+   end,
+})
