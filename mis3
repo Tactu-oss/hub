@@ -1,0 +1,110 @@
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/Tactu-oss/hub/refs/heads/main/Rayfield2'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "Legacy Hub",
+    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+    LoadingTitle = "Legacy Hub",
+    LoadingSubtitle = "by King",
+    Theme = "Dark Blue", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+ 
+    DisableRayfieldPrompts = false,
+    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+ 
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = nil, -- Create a custom folder for your hub/game
+       FileName = "Legacy Hub"
+    },
+ 
+    Discord = {
+       Enabled = true, -- Prompt the user to join your Discord server if their executor supports it
+       Invite = "gDKjAr4R", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ABCD would be ABCD
+       RememberJoins = false -- Set this to false to make them join the discord every time they load it up
+    },
+ 
+    KeySystem = true, -- Set this to true to use our key system
+    KeySettings = {
+       Title = "Legacy Hub",
+       Subtitle = "Freemium Key System",
+       Note = 'Get your key by clicking the<font color="#32CD32"> "Get a Script Key" '.."</font>button! or alternatively, you can visit our discord below!", -- Use this to tell the user how to get a key
+       FileName = "LegacyKey", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+       SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+       GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+    }
+ })
+
+local Tab = Window:CreateTab("Misc", "folder-cog") -- Title, Image
+local Section = Tab:CreateSection("Misc Settings")
+
+getgenv().VState3 = false
+local Toggle3 = Tab:CreateToggle({
+    Name = "Auto-Restart",
+    CurrentValue = false,
+    Flag = "Toggle3", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        getgenv().VState3 = Value
+        if getgenv().VState3 == true then
+            while getgenv().VState3 == true do
+                task.wait(1)
+                if  game:GetService("ReplicatedStorage").Remotes:FindFirstChild("VoteRestart") then
+                    game:GetService("ReplicatedStorage").Remotes.VoteRestart:FireServer()
+                end
+            end
+        else
+            return
+        end
+    end,
+ })
+
+getgenv().DMap = nil
+ local Dropdown = Tab:CreateDropdown({
+    Name = "Select Difficulty",
+    Options = {"Easy","Medium","Hard","Expert","BossRushOne"},
+    CurrentOption = {"Select an option!"},
+    MultipleOptions = false,
+    Flag = "Dropdown2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Options)
+        getgenv().DMap = Options[1]
+        Rayfield:Notify({
+            Title = "Difficulty Selected!",
+            Content = "Selected Difficulty: "..Options[1],
+            Duration = 4,
+            Image = "rewind",
+        })
+    end,
+ })
+
+ getgenv().VState4 = false
+local Toggle4 = Tab:CreateToggle({
+    Name = "Auto-Difficulty",
+    CurrentValue = false,
+    Flag = "Toggle4", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        getgenv().VState4 = Value
+        if getgenv().VState4 == true then
+            
+            if getgenv().DMap ~= nil then
+                while getgenv().VState4 == true do
+                    task.wait(1)
+                    if game:GetService("ReplicatedStorage").Remotes:FindFirstChild("VoteDifficulty") then
+                        local ohString1 = tostring(getgenv().DMap)
+                        game:GetService("ReplicatedStorage").Remotes.VoteDifficulty:FireServer(ohString1)
+                    end
+                end
+            end
+
+        else
+            return
+        end
+    end,
+ })
+
+local Section = Tab:CreateSection("Interface")
+local Paragraph = Tab:CreateParagraph({Title = "Warning!", Content = "Make sure to disable all toggles before destroying the interface!"})
+local Button = Tab:CreateButton({
+   Name = "Destroy Interface",
+   Callback = function()
+      Rayfield:Destroy()
+   end,
+})
