@@ -33,3 +33,50 @@ local Window = Rayfield:CreateWindow({
        Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
     }
  })
+
+ local PlayerTV = nil
+ local Input = Tab:CreateInput({
+   Name = "Input Example",
+   CurrentValue = "",
+   PlaceholderText = "Input Placeholder",
+   RemoveTextAfterFocusLost = false,
+   Flag = "Input1",
+   Callback = function(Text)
+      PlayerTV = CurrentValue
+   end,
+})
+
+ local Toggle = Tab:CreateToggle({
+   Name = "Toggle Example",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+      print(PlayerTV)
+      if PlayerTV ~= nil and game.Players:FindFirstChild(PlayerTV) then
+         local Plr = game.Players:FindFirstChild(PlayerTV)
+         local Char = Plr.Character or Plr.CharacterAdded:Wait()
+         local Primary = Char:WaitForChild("HumanoidRootPart")
+         
+         local Cam = workspace.CurrentCamera
+         local StudsY = 20
+         
+         local function Enable()
+            Cam.CameraType = Enum.CameraType.Scriptable
+         
+            game["Run Service"].RenderStepped:Connect(function()
+               Cam.CFrame = CFrame.new(Primary.Position.X,StudsY,Primary.Position.Z) * CFrame.Angles(math.rad(-90),0,0)
+            end)
+         end
+         local function Disable()
+            Cam.CameraType = Enum.CameraType.Custom
+         end
+
+         if CurrentValue == false then
+            Enable()
+         else
+            Disable()
+         end
+
+      end
+   end,
+})
