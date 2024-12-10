@@ -34,6 +34,9 @@ local Window = Rayfield:CreateWindow({
     }
  })
 
+local Tab = Window:CreateTab("Macro", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Half-Macro Stuff")
+
  local PlayerTV = nil
  local Input = Tab:CreateInput({
    Name = "Input Example",
