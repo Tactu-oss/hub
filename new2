@@ -39,13 +39,14 @@ local Section = Tab:CreateSection("Half-Macro Stuff")
 
  local PlayerTV = nil
  local Input = Tab:CreateInput({
-   Name = "Input Example",
+   Name = "Input your roblox name here:",
    CurrentValue = "",
    PlaceholderText = "Input Placeholder",
    RemoveTextAfterFocusLost = false,
    Flag = "Input1",
    Callback = function(Text)
       PlayerTV = CurrentValue
+      print(CurrentValue)
    end,
 })
 
