@@ -1,0 +1,36 @@
+local HttpService = game:GetService("HttpService")
+
+-- URL to the raw file containing the keys
+local url = "https://raw.githubusercontent.com/Tactu-oss/hub/refs/heads/main/t1"
+
+-- Function to fetch the file content and convert it into a table
+local function fetchAndConvertKeys(url)
+    -- Make a GET request to fetch the file content
+    local response = HttpService:GetAsync(url)
+    
+    -- Check if the response was successful and not empty
+    if response and response ~= "" then
+        -- Split the content by commas into a table
+        local keyTable = {}
+        
+        -- Use string.gmatch to split the response by commas
+        for key in string.gmatch(response, "([^,]+)") do
+            -- Remove any leading/trailing spaces and insert into the table
+            table.insert(keyTable, key:match("^%s*(.-)%s*$"))
+        end
+        
+        -- Return the table
+        return keyTable
+    else
+        warn("Failed to fetch data or the content is empty.")
+        return {}
+    end
+end
+
+-- Fetch and convert the keys from the URL
+local keyTable = fetchAndConvertKeys(url)
+
+-- Output the keys to the console (print them)
+for _, key in ipairs(keyTable) do
+    print(key)
+end
