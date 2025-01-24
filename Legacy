@@ -1,0 +1,75 @@
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
+local TeleportCheck = false
+game.Players.LocalPlayer.OnTeleport:Connect(function(State)
+	if KeepField and (not TeleportCheck) and queueteleport then
+		TeleportCheck = true
+		queueteleport("loadstring(game:HttpGet('raw link here'))()")
+	end
+end)
+
+if getgenv().StopNOW ~= nil and getgenv().StopNOW == true then 
+return
+end
+
+task.wait(math.random())
+local CanDo = false
+
+Players = game:GetService("Players")
+GuiService = game:GetService("GuiService")
+TeleportService = game:GetService("TeleportService")
+PlaceId = 8304191830
+
+local function rejoin()
+    TeleportService:Teleport(PlaceId, Players.LocalPlayer)
+end
+
+TeleportService.TeleportInitFailed:Connect(function(player, teleportResult, errorMessage)
+    rejoin()
+end)
+
+GuiService.ErrorMessageChanged:Connect(function()
+    rejoin()
+end)
+
+task.wait(5)
+if workspace._MAP_CONFIG.IsLobby.Value then
+    CanDo = true
+else
+    CanDo = false
+end
+
+task.delay(0,function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/evxncodes/mainroblox/main/anti-afk", true))()
+end)
+
+task.delay(0,function()
+    loadstring(game:HttpGet("https://pastebin.com/raw/8dsvYWtb", true))()
+end)
+
+local Loader = require(game.ReplicatedStorage.src.Loader)
+while true do
+    local EndpointsClient = Loader.load_client_service(script, "EndpointsClient")
+    task.wait(1)
+    task.delay(0,function()
+        if CanDo == true then 
+            pcall(function() 
+                EndpointsClient.invoke_server("request_matchmaking","christmas_event")
+            end)
+        else
+            if game:GetService("Players").LocalPlayer.PlayerGui.VoteStart.Enabled == true then
+                pcall(function() 
+                    EndpointsClient.invoke_server("vote_start")
+                end)
+            end
+            if game:GetService("Players").LocalPlayer.PlayerGui.ResultsUI.Enabled == true then
+                pcall(function() 
+                    EndpointsClient.invoke_server("teleport_back_to_lobby")
+                end)
+            end
+        end
+    end)
+end
